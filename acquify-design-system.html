@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acquify · Design System v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Primary Tones */
+    --black: #000000;
+    --carbon: #222326;
+    --off-white: #F4F5F8;
+    --white: #FFFFFF;
+
+    /* Functional layers (derived) */
+    --bg: var(--black);
+    --surface: var(--carbon);
+    --surface-elev: #2C2D31;
+    --line: rgba(244, 245, 248, 0.08);
+    --line-strong: rgba(244, 245, 248, 0.18);
+    --text: var(--off-white);
+    --text-mute: rgba(244, 245, 248, 0.48);
+    --text-faint: rgba(244, 245, 248, 0.24);
+
+    /* Typography */
+    --font-display: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Scale */
+    --tracking-loose: 0.32em;
+    --tracking-wide: 0.18em;
+    --tracking-tight: -0.02em;
+
+    /* Layout */
+    --max: 1320px;
+    --gutter: 48px;
+    --radius: 2px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Atmospheric background — "light emerges from within" */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 800px 600px at 20% 10%, rgba(244, 245, 248, 0.04), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 85% 80%, rgba(244, 245, 248, 0.03), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    z-index: 1;
+  }
+
+  main, header, nav, footer { position: relative; z-index: 2; }
+
+  /* ─── NAV ─────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 22px var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    background: rgba(0, 0, 0, 0.72);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-mark {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    font-size: 12px;
+  }
+
+  .nav-mark svg { width: 22px; height: 22px; }
+
+  .nav-mark .divider {
+    width: 1px; height: 14px; background: var(--line-strong);
+  }
+
+  .nav-links {
+    display: flex; gap: 36px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .nav-links a {
+    color: var(--text-mute);
+    text-decoration: none;
+    transition: color .3s ease;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-version {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── HERO ─────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    padding: 180px var(--gutter) 80px;
+    max-width: var(--max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: var(--tracking-loose);
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 48px;
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .hero-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--line-strong), transparent);
+    max-width: 200px;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(56px, 9vw, 132px);
+    line-height: 0.92;
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: 56px;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    font-weight: 500;
+    background: linear-gradient(135deg, #fff 0%, var(--text-mute) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    border-top: 1px solid var(--line);
+    padding-top: 32px;
+  }
+
+  .hero-meta-item .label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+  }
+
+  .hero-meta-item .value {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* ─── SECTION SHELL ───────────────────────────── */
+  section {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 120px var(--gutter);
+    border-top: 1px solid var(--line);
+  }
+
+  .section-header {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    margin-bottom: 80px;
+    align-items: start;
+  }
+
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+    padding-top: 12px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1;
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: 16px;
+  }
+
+  .section-lead {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--text-mute);
+    max-width: 580px;
+    line-height: 1.6;
+  }
+
+  /* ─── PRINCIPLES ───────────────────────────────── */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .principle {
+    background: var(--bg);
+    padding: 56px 48px;
+    position: relative;
+    overflow: hidden;
+    transition: background .5s ease;
+  }
+
+  .principle:hover { background: var(--carbon); }
+
+  .principle-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-bottom: 32px;
+    letter-spacing: 0.1em;
+  }
+
+  .principle-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: 12px;
+  }
+
+  .principle-desc {
+    color: var(--text-mute);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 320px;
+  }
+
+  /* ─── LOGO ─────────────────────────────────────── */
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .logo-frame {
+    border: 1px solid var(--line);
+    padding: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 320px;
+  }
+
+  .logo-frame.dark { background: var(--bg); }
+  .logo-frame.light { background: var(--off-white); }
+
+  .logo-frame .corner {
+    position: absolute;
+    top: 16px; left: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+  }
+  .logo-frame.light .corner { color: rgba(0,0,0,0.4); }
+
+  .logo-frame .caption {
+    position: absolute;
+    bottom: 16px; right: 16px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    color: var(--text-mute);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+  .logo-frame.light .caption { color: rgba(0,0,0,0.5); }
+
+  .logo-variants {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .logo-mini {
+    border: 1px solid var(--line);
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 148px;
+    background: var(--bg);
+  }
+
+  .logo-mini.invert { background: var(--off-white); }
+
+  /* Logo SVG composition */
+  .acquify-lockup {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .acquify-lockup .mark { width: 44px; height: 44px; }
+  .acquify-lockup .bar { width: 1px; height: 28px; background: currentColor; opacity: .25; }
+  .acquify-lockup .wordmark {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  /* Misuse */
+  .misuse {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+
+  .misuse-card {
+    border: 1px solid var(--line);
+    padding: 32px;
+    text-align: center;
+    background: rgba(34, 35, 38, 0.4);
+    position: relative;
+  }
+
+  .misuse-card .preview {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    opacity: 0.4;
+  }
+
+  .misuse-card .x {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-mute);
+  }
+  .misuse-card .x::before {
+    content: '✕';
+    color: #ff5454;
+    margin-right: 8px;
+    opacity: 0.7;
+  }
+
+  /* Clear space */
+  .clearspace {
+    margin-top: 48px;
+    border: 1px solid var(--line);
+    padding: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(34, 35, 38, 0.3);
+    position: relative;
+  }
+
+  .clearspace-zone {
+    padding: 44px;
+    border: 1px dashed var(--line-strong);
+    position: relative;
+  }
+
+  .clearspace-zone::before,
+  .clearspace-zone::after {
+    content: '1x';
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-faint);
+  }
+  .clearspace-zone::before { top: 18px; left: 50%; transform: translateX(-50%); }
+  .clearspace-zone::after { bottom: 18px; left: 50%; transform: translateX(-50%); }
+
+  /* ─── COLOR ────────────────────────────────────── */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .swatch {
+    border: 1px solid var(--line);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .swatch-color {
+    aspect-ratio: 4/5;
+    position: relative;
+    transition: transform .6s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .swatch:hover .swatch-color { transform: scale(0.98); }
+
+  .swatch-color .role {
+    position: absolute;
+    top: 20px; left: 20px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+  }
+  .swatch[data-light="true"] .swatch-color .role { color: rgba(0,0,0,0.4); }
+
+  .swatch-meta {
+    padding: 20px;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+
+  .swatch-meta .name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .swatch-meta .hex {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-mute);
+    margin-bottom: 8px;
+  }
+
+  .swatch-meta .rgb {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+
+  /* Usage ratio */
+  .ratio {
+    margin-top: 64px;
+    border: 1px solid var(--line);
+    padding: 40px;
+  }
+
+  .ratio-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 24px;
+  }
+
+  .ratio-bar {
+    display: flex;
+    height: 56px;
+    border: 1px solid var(--line);
+  }
+
+  .ratio-bar > div {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    transition: flex .8s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .ratio-black { flex: 60; background: var(--black); color: var(--text-mute); border-right: 1px solid var(--line); }
+  .ratio-carbon { flex: 25; background: var(--carbon); color: var(--text-mute); border-right: 1px solid var(--line); }
+  .ratio-off { flex: 14; background: var(--off-white); color: rgba(0,0,0,0.5); border-right: 1px solid var(--line); }
+  .ratio-white { flex: 1; background: var(--white); color: rgba(0,0,0,0.5); }
+
+  .ratio-note {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--text-mute);
+    max-width: 640px;
+  }
+  .ratio-note strong { color: var(--text); font-weight: 500; }
+
+  /* ─── TYPOGRAPHY ──────────────────────────────── */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .type-card {
+    border: 1px solid var(--line);
+    padding: 48px;
+    background: rgba(34, 35, 38, 0.2);
+    position: relative;
+  }
+
+  .type-card .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 40px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .type-card .header .role { color: var(--text-faint); }
+  .type-card .header .name { color: var(--text); }
+
+  .type-specimen {
+    font-size: 120px;
+    line-height: 1;
+    margin-bottom: 32px;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .type-specimen.mont { font-family: var(--font-display); font-weight: 500; }
+  .type-specimen.inter { font-family: var(--font-body); font-weight: 400; }
+
+  .type-alphabet {
+    font-size: 13px;
+    color: var(--text-mute);
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+
+  .type-card.a .type-alphabet { font-family: var(--font-display); font-weight: 500; }
+  .type-card.b .type-alphabet { font-family: var(--font-body); font-weight: 400; }
+
+  .type-usage {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--text-mute);
+  }
+
+  /* Type scale */
+  .scale {
+    margin-top: 48px;
+    border: 1px solid var(--line);
+  }
+
+  .scale-row {
+    display: grid;
+    grid-template-columns: 100px 80px 100px 1fr;
+    align-items: baseline;
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--line);
+    gap: 24px;
+  }
+  .scale-row:last-child { border-bottom: none; }
+
+  .scale-token {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+  }
+
+  .scale-size {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-mute);
+  }
+
+  .scale-weight {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-mute);
+    text-transform: uppercase;
+  }
+
+  .scale-sample {
+    font-family: var(--font-display);
+    color: var(--text);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .scale-sample.body { font-family: var(--font-body); }
+
+  .scale-row[data-size="64"] .scale-sample { font-size: 56px; font-weight: 300; line-height: 1; }
+  .scale-row[data-size="40"] .scale-sample { font-size: 36px; font-weight: 400; line-height: 1.1; }
+  .scale-row[data-size="24"] .scale-sample { font-size: 22px; font-weight: 500; line-height: 1.2; }
+  .scale-row[data-size="16"] .scale-sample { font-size: 16px; font-weight: 400; line-height: 1.5; }
+  .scale-row[data-size="13"] .scale-sample { font-size: 13px; font-weight: 400; line-height: 1.55; }
+  .scale-row[data-size="11"] .scale-sample {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  /* ─── COMPONENTS ──────────────────────────────── */
+  .components {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .component-card {
+    border: 1px solid var(--line);
+    padding: 40px;
+    background: rgba(34, 35, 38, 0.25);
+  }
+
+  .component-card .label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 32px;
+  }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    padding: 16px 28px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .3s ease;
+    background: transparent;
+    color: var(--text);
+  }
+
+  .btn-primary {
+    background: var(--off-white);
+    color: var(--black);
+  }
+  .btn-primary:hover { background: var(--white); transform: translateY(-1px); }
+
+  .btn-ghost {
+    border-color: var(--line-strong);
+    color: var(--text);
+  }
+  .btn-ghost:hover { border-color: var(--off-white); }
+
+  .btn-text {
+    color: var(--text-mute);
+    padding: 16px 0;
+  }
+  .btn-text:hover { color: var(--text); }
+  .btn-text::after {
+    content: ' →';
+    transition: margin .3s ease;
+  }
+  .btn-text:hover::after { margin-left: 6px; }
+
+  /* Input */
+  .input-stack { display: flex; flex-direction: column; gap: 16px; }
+
+  .input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 12px 0;
+    width: 100%;
+    transition: border-color .3s ease;
+  }
+  .input:focus { outline: none; border-color: var(--off-white); }
+  .input::placeholder { color: var(--text-faint); }
+
+  .input-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 8px;
+  }
+
+  /* Card sample */
+  .card-sample {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 32px;
+  }
+
+  .card-sample .eyebrow {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 16px;
+  }
+
+  .card-sample .title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: 12px;
+  }
+
+  .card-sample .body {
+    color: var(--text-mute);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  /* Badges */
+  .badge-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .badge {
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--line-strong);
+    color: var(--text-mute);
+  }
+
+  .badge.solid {
+    background: var(--off-white);
+    color: var(--black);
+    border-color: var(--off-white);
+  }
+
+  /* ─── VISUAL LANGUAGE ─────────────────────────── */
+  .visuals {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .visual-tile {
+    aspect-ratio: 16/10;
+    border: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .visual-tile .tile-label {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-mute);
+    z-index: 3;
+  }
+
+  .visual-tile .tile-num {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    z-index: 3;
+  }
+
+  /* Tile 1 — dark base / inner light */
+  .tile-1 {
+    background:
+      radial-gradient(ellipse 200px 120px at 60% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0.1) 40%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 60% 50%, rgba(255,255,255,0.05), transparent 70%),
+      var(--bg);
+  }
+
+  /* Tile 2 — organic luminous spheres */
+  .tile-2 {
+    background:
+      radial-gradient(circle 60px at 25% 40%, rgba(255,255,255,0.6), transparent 60%),
+      radial-gradient(circle 80px at 55% 65%, rgba(255,255,255,0.5), transparent 60%),
+      radial-gradient(circle 50px at 75% 35%, rgba(255,255,255,0.55), transparent 60%),
+      radial-gradient(circle 40px at 40% 75%, rgba(255,255,255,0.4), transparent 60%),
+      var(--bg);
+    filter: blur(0.5px);
+  }
+
+  /* Tile 3 — selective luminosity */
+  .tile-3 {
+    background:
+      radial-gradient(ellipse 180px 100px at 70% 60%, rgba(255,255,255,0.35), transparent 60%),
+      var(--bg);
+  }
+
+  /* Tile 4 — volume / arched lines */
+  .tile-4 {
+    background: var(--bg);
+    position: relative;
+  }
+
+  .tile-4::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-radial-gradient(
+        circle at 50% 130%,
+        transparent 0,
+        transparent 38px,
+        rgba(255,255,255,0.12) 38px,
+        rgba(255,255,255,0.12) 39px
+      );
+    mask: linear-gradient(to bottom, transparent 30%, black 60%, black 90%);
+    -webkit-mask: linear-gradient(to bottom, transparent 30%, black 60%, black 90%);
+  }
+
+  .nots {
+    margin-top: 48px;
+    border: 1px solid var(--line);
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nots .label {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .nots .items {
+    display: flex;
+    gap: 24px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--text-mute);
+  }
+  .nots .items span::before {
+    content: '✕ ';
+    color: #ff5454;
+    opacity: .7;
+    margin-right: 4px;
+  }
+
+  /* ─── TOKENS ─────────────────────────────────── */
+  .tokens {
+    border: 1px solid var(--line);
+    background: rgba(34, 35, 38, 0.2);
+    padding: 40px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.9;
+    overflow-x: auto;
+  }
+
+  .tokens .comment { color: var(--text-faint); }
+  .tokens .var { color: var(--text); }
+  .tokens .val { color: var(--text-mute); }
+
+  /* ─── FOOTER ─────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 64px var(--gutter);
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 48px;
+    color: var(--text-faint);
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  footer .center {
+    display: flex; align-items: center; gap: 16px;
+  }
+  footer .center svg { width: 18px; height: 18px; opacity: 0.5; }
+  footer .right { text-align: right; }
+
+  /* ─── ANIMATIONS ─────────────────────────────── */
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero > * { animation: reveal 1s cubic-bezier(.2,.8,.2,1) both; }
+  .hero-eyebrow { animation-delay: .1s; }
+  .hero-title { animation-delay: .25s; }
+  .hero-meta { animation-delay: .45s; }
+
+  /* ─── RESPONSIVE ─────────────────────────────── */
+  @media (max-width: 900px) {
+    :root { --gutter: 24px; }
+    .nav-links { display: none; }
+    .principles, .components, .visuals, .type-grid { grid-template-columns: 1fr; }
+    .palette { grid-template-columns: repeat(2, 1fr); }
+    .logo-grid { grid-template-columns: 1fr; }
+    .hero-meta { grid-template-columns: repeat(2, 1fr); }
+    .section-header { grid-template-columns: 1fr; gap: 16px; }
+    .scale-row { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-mark">
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M5 19 L12 4 L19 19 L14 19 L12 13 Z" fill="#F4F5F8"/>
+    </svg>
+    <span class="divider"></span>
+    <span>ACQUIFY</span>
+    <span class="divider"></span>
+    <span style="color: var(--text-mute);">DESIGN SYSTEM</span>
+  </div>
+  <div class="nav-links">
+    <a href="#principles">Principles</a>
+    <a href="#logo">Logo</a>
+    <a href="#color">Color</a>
+    <a href="#type">Typography</a>
+    <a href="#components">Components</a>
+    <a href="#visual">Visual</a>
+  </div>
+  <div class="nav-version">v1.0 · 2026</div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    Brand Guidelines · System Specification
+  </div>
+
+  <h1 class="hero-title">
+    Light is <em>earned,</em><br>
+    not distributed.
+  </h1>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="label">Version</div>
+      <div class="value">1.0 · 2026</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">Origin</div>
+      <div class="value">San Juan · PR</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">Contact</div>
+      <div class="value">brand@acquify.co</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">Chapters</div>
+      <div class="value">06 / Sections</div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ PRINCIPLES ═══ -->
+<section id="principles">
+  <div class="section-header">
+    <div class="section-num">01 / Principles</div>
+    <div>
+      <h2 class="section-title">Five rules that govern everything.</h2>
+      <p class="section-lead">The brand is predominantly dark. Light emerges from within, never imposed from outside. These five principles precede every design decision.</p>
+    </div>
+  </div>
+
+  <div class="principles">
+    <div class="principle">
+      <div class="principle-num">01</div>
+      <div class="principle-title">Dark base</div>
+      <div class="principle-desc">Light emerges from within the composition, not laid on top of it.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">02</div>
+      <div class="principle-title">Organic structure</div>
+      <div class="principle-desc">No mechanical grids. Form follows breath, not measurement.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">03</div>
+      <div class="principle-title">Selective luminosity</div>
+      <div class="principle-desc">Brightness is earned. Reserve light for what matters most.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">04</div>
+      <div class="principle-title">Volume and depth</div>
+      <div class="principle-desc">Flat is not Acquify. Every surface has weight and atmosphere.</div>
+    </div>
+    <div class="principle" style="grid-column: 1 / -1;">
+      <div class="principle-num">05</div>
+      <div class="principle-title">Monochromatic range</div>
+      <div class="principle-desc">Black to off-white. No chromatic accents. Ever.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LOGO ═══ -->
+<section id="logo">
+  <div class="section-header">
+    <div class="section-num">02 / Logo</div>
+    <div>
+      <h2 class="section-title">The mark and its lockups.</h2>
+      <p class="section-lead">A geometric apex. Authority through restraint. Use uppercase ACQUIFY for marketing; title case Acquify for documents.</p>
+    </div>
+  </div>
+
+  <div class="logo-grid">
+    <div class="logo-frame dark">
+      <span class="corner">PRIMARY</span>
+      <div class="acquify-lockup" style="color: var(--off-white);">
+        <svg class="mark" viewBox="0 0 48 48" fill="none">
+          <path d="M10 40 L24 8 L38 40 L29 40 L24 26 Z" fill="currentColor"/>
+        </svg>
+        <span class="bar"></span>
+        <span class="wordmark">ACQUIFY</span>
+      </div>
+      <span class="caption">Horizontal Lockup</span>
+    </div>
+    <div class="logo-frame light">
+      <span class="corner">INVERSE</span>
+      <div class="acquify-lockup" style="color: var(--black);">
+        <svg class="mark" viewBox="0 0 48 48" fill="none">
+          <path d="M10 40 L24 8 L38 40 L29 40 L24 26 Z" fill="currentColor"/>
+        </svg>
+        <span class="bar"></span>
+        <span class="wordmark">ACQUIFY</span>
+      </div>
+      <span class="caption">On Off-White</span>
+    </div>
+  </div>
+
+  <div class="logo-variants">
+    <div class="logo-mini">
+      <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+        <path d="M10 40 L24 8 L38 40 L29 40 L24 26 Z" fill="#F4F5F8"/>
+      </svg>
+    </div>
+    <div class="logo-mini invert">
+      <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+        <path d="M10 40 L24 8 L38 40 L29 40 L24 26 Z" fill="#000000"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="clearspace">
+    <div class="clearspace-zone">
+      <div class="acquify-lockup" style="color: var(--off-white);">
+        <svg class="mark" viewBox="0 0 48 48" fill="none">
+          <path d="M10 40 L24 8 L38 40 L29 40 L24 26 Z" fill="currentColor"/>
+        </svg>
+        <span class="bar"></span>
+        <span class="wordmark">ACQUIFY</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="misuse">
+    <div class="misuse-card">
+      <div class="preview">
+        <svg width="36" height="36" viewBox="0 0 48 48" style="transform: rotate(18deg);">
+          <path d="M10 40 L24 8 L38 40 L29 40 L24 26 Z" fill="#F4F5F8"/>
+        </svg>
+      </div>
+      <div class="x">No Rotation</div>
+    </div>
+    <div class="misuse-card">
+      <div class="preview">
+        <svg width="60" height="32" viewBox="0 0 48 48" preserveAspectRatio="none">
+          <path d="M10 40 L24 8 L38 40 L29 40 L24 26 Z" fill="#F4F5F8"/>
+        </svg>
+      </div>
+      <div class="x">No Distortion</div>
+    </div>
+    <div class="misuse-card">
+      <div class="preview" style="opacity: 0.3;">
+        <svg width="36" height="36" viewBox="0 0 48 48">
+          <path d="M10 40 L24 8 L38 40 L29 40 L24 26 Z" fill="#F4F5F8"/>
+        </svg>
+      </div>
+      <div class="x">No Reduced Opacity</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COLOR ═══ -->
+<section id="color">
+  <div class="section-header">
+    <div class="section-num">03 / Color</div>
+    <div>
+      <h2 class="section-title">Three primary tones. One support.</h2>
+      <p class="section-lead">No chromatic accents. The palette is intentionally narrow to enforce the discipline of monochromatic range.</p>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-color" style="background: #000000;">
+        <div class="role">PRIMARY · 01</div>
+      </div>
+      <div class="swatch-meta">
+        <div class="name">Black</div>
+        <div class="hex">#000000</div>
+        <div class="rgb">RGB 0 · 0 · 0</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #222326;">
+        <div class="role">PRIMARY · 02</div>
+      </div>
+      <div class="swatch-meta">
+        <div class="name">Carbon</div>
+        <div class="hex">#222326</div>
+        <div class="rgb">RGB 34 · 35 · 38</div>
+      </div>
+    </div>
+    <div class="swatch" data-light="true">
+      <div class="swatch-color" style="background: #F4F5F8;">
+        <div class="role">PRIMARY · 03</div>
+      </div>
+      <div class="swatch-meta">
+        <div class="name">Off White</div>
+        <div class="hex">#F4F5F8</div>
+        <div class="rgb">RGB 244 · 245 · 248</div>
+      </div>
+    </div>
+    <div class="swatch" data-light="true">
+      <div class="swatch-color" style="background: #FFFFFF; border-left: 1px solid var(--line);">
+        <div class="role">SUPPORT · 04</div>
+      </div>
+      <div class="swatch-meta">
+        <div class="name">White</div>
+        <div class="hex">#FFFFFF</div>
+        <div class="rgb">RGB 255 · 255 · 255</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ratio">
+    <div class="ratio-label">Usage Ratio · Surface Allocation</div>
+    <div class="ratio-bar">
+      <div class="ratio-black">60% · Black</div>
+      <div class="ratio-carbon">25% · Carbon</div>
+      <div class="ratio-off">14% · Off</div>
+      <div class="ratio-white">1%</div>
+    </div>
+    <p class="ratio-note">Three primary tones. One typographic support. <strong>No chromatic accents.</strong> The brand is predominantly dark — light is earned, not distributed.</p>
+  </div>
+</section>
+
+<!-- ═══ TYPOGRAPHY ═══ -->
+<section id="type">
+  <div class="section-header">
+    <div class="section-num">04 / Typography</div>
+    <div>
+      <h2 class="section-title">Two voices. Never inverted.</h2>
+      <p class="section-lead">Montserrat carries authority — headlines, labels, brand voice. Inter carries information — body copy, captions, data. Roles do not invert.</p>
+    </div>
+  </div>
+
+  <div class="type-grid">
+    <div class="type-card a">
+      <div class="header">
+        <span class="role">01 · Primary</span>
+        <span class="name">Montserrat Medium</span>
+      </div>
+      <div class="type-specimen mont">Aa</div>
+      <div class="type-alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+      <div class="type-alphabet">0123456789</div>
+      <div class="type-usage">Authority · Headlines · Labels</div>
+    </div>
+    <div class="type-card b">
+      <div class="header">
+        <span class="role">02 · Secondary</span>
+        <span class="name">Inter Regular</span>
+      </div>
+      <div class="type-specimen inter">Aa</div>
+      <div class="type-alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+      <div class="type-alphabet">0123456789</div>
+      <div class="type-usage">Information · Body · Captions</div>
+    </div>
+  </div>
+
+  <div class="scale">
+    <div class="scale-row" data-size="64">
+      <div class="scale-token">display</div>
+      <div class="scale-size">64 / 72</div>
+      <div class="scale-weight">Mont · 300</div>
+      <div class="scale-sample">Light emerges</div>
+    </div>
+    <div class="scale-row" data-size="40">
+      <div class="scale-token">h1</div>
+      <div class="scale-size">40 / 44</div>
+      <div class="scale-weight">Mont · 400</div>
+      <div class="scale-sample">Section heading</div>
+    </div>
+    <div class="scale-row" data-size="24">
+      <div class="scale-token">h2</div>
+      <div class="scale-size">24 / 28</div>
+      <div class="scale-weight">Mont · 500</div>
+      <div class="scale-sample">Component title</div>
+    </div>
+    <div class="scale-row" data-size="16">
+      <div class="scale-token">body</div>
+      <div class="scale-size">16 / 24</div>
+      <div class="scale-weight">Inter · 400</div>
+      <div class="scale-sample body">The paragraph carries information without drawing attention to itself.</div>
+    </div>
+    <div class="scale-row" data-size="13">
+      <div class="scale-token">caption</div>
+      <div class="scale-size">13 / 20</div>
+      <div class="scale-weight">Inter · 400</div>
+      <div class="scale-sample body">Supporting detail and metadata.</div>
+    </div>
+    <div class="scale-row" data-size="11">
+      <div class="scale-token">label</div>
+      <div class="scale-size">11 / 16</div>
+      <div class="scale-weight">Mont · 500</div>
+      <div class="scale-sample">UPPERCASE LABEL</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMPONENTS ═══ -->
+<section id="components">
+  <div class="section-header">
+    <div class="section-num">05 / Components</div>
+    <div>
+      <h2 class="section-title">The smallest expressions of the system.</h2>
+      <p class="section-lead">Components inherit the same discipline as the brand: restrained surfaces, earned contrast, no decorative color.</p>
+    </div>
+  </div>
+
+  <div class="components">
+    <div class="component-card">
+      <div class="label">Buttons</div>
+      <div class="btn-row">
+        <button class="btn btn-primary">Primary Action</button>
+        <button class="btn btn-ghost">Secondary</button>
+        <button class="btn btn-text">Learn more</button>
+      </div>
+    </div>
+
+    <div class="component-card">
+      <div class="label">Form Input</div>
+      <div class="input-stack">
+        <div>
+          <div class="input-label">Email</div>
+          <input class="input" type="text" placeholder="hello@acquify.co">
+        </div>
+        <div>
+          <div class="input-label">Company</div>
+          <input class="input" type="text" placeholder="Your company">
+        </div>
+      </div>
+    </div>
+
+    <div class="component-card">
+      <div class="label">Card</div>
+      <div class="card-sample">
+        <div class="eyebrow">Case Study · 2026</div>
+        <div class="title">A service-based business in Puerto Rico</div>
+        <div class="body">A measured approach to qualified lead generation, executed within a monochromatic brand system.</div>
+        <button class="btn btn-text" style="padding: 0;">Read case</button>
+      </div>
+    </div>
+
+    <div class="component-card">
+      <div class="label">Badges</div>
+      <div class="badge-row">
+        <span class="badge solid">New</span>
+        <span class="badge">Beta</span>
+        <span class="badge">B2B</span>
+        <span class="badge">PR · LATAM</span>
+      </div>
+      <div class="badge-row" style="margin-top: 24px;">
+        <span class="badge">v1.0</span>
+        <span class="badge">2026</span>
+        <span class="badge">Monochrome</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VISUAL LANGUAGE ═══ -->
+<section id="visual">
+  <div class="section-header">
+    <div class="section-num">06 / Visual Language</div>
+    <div>
+      <h2 class="section-title">Atmosphere over decoration.</h2>
+      <p class="section-lead">Imagery breathes light from within darkness. Volumetric, organic, restrained. Never flat. Never colored. Never sourced from stock.</p>
+    </div>
+  </div>
+
+  <div class="visuals">
+    <div class="visual-tile tile-1">
+      <div class="tile-num">01</div>
+      <div class="tile-label">Dark base · Inner light</div>
+    </div>
+    <div class="visual-tile tile-2">
+      <div class="tile-num">02</div>
+      <div class="tile-label">Organic luminosity</div>
+    </div>
+    <div class="visual-tile tile-3">
+      <div class="tile-num">03</div>
+      <div class="tile-label">Selective brightness</div>
+    </div>
+    <div class="visual-tile tile-4">
+      <div class="tile-num">04</div>
+      <div class="tile-label">Volume · Depth · Form</div>
+    </div>
+  </div>
+
+  <div class="nots">
+    <div class="label">Not</div>
+    <div class="items">
+      <span>Color</span>
+      <span>Stock photography</span>
+      <span>Flat icons</span>
+      <span>Decorative gradients</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TOKENS ═══ -->
+<section>
+  <div class="section-header">
+    <div class="section-num">07 / Tokens</div>
+    <div>
+      <h2 class="section-title">Design tokens.</h2>
+      <p class="section-lead">CSS custom properties for direct implementation. Copy and paste.</p>
+    </div>
+  </div>
+
+  <div class="tokens">
+<span class="comment">/* ── Acquify Design Tokens · v1.0 ──────────────── */</span>
+:root {
+  <span class="comment">/* Primary Tones */</span>
+  <span class="var">--acq-black</span>:      <span class="val">#000000;</span>
+  <span class="var">--acq-carbon</span>:     <span class="val">#222326;</span>
+  <span class="var">--acq-off-white</span>:  <span class="val">#F4F5F8;</span>
+  <span class="var">--acq-white</span>:      <span class="val">#FFFFFF;</span>
+
+  <span class="comment">/* Functional */</span>
+  <span class="var">--acq-bg</span>:         <span class="val">var(--acq-black);</span>
+  <span class="var">--acq-surface</span>:    <span class="val">var(--acq-carbon);</span>
+  <span class="var">--acq-text</span>:       <span class="val">var(--acq-off-white);</span>
+  <span class="var">--acq-line</span>:       <span class="val">rgba(244, 245, 248, 0.08);</span>
+
+  <span class="comment">/* Typography */</span>
+  <span class="var">--acq-font-display</span>: <span class="val">'Montserrat', sans-serif;</span>
+  <span class="var">--acq-font-body</span>:    <span class="val">'Inter', sans-serif;</span>
+
+  <span class="comment">/* Tracking */</span>
+  <span class="var">--acq-track-loose</span>: <span class="val">0.32em;</span>
+  <span class="var">--acq-track-wide</span>:  <span class="val">0.18em;</span>
+  <span class="var">--acq-track-tight</span>: <span class="val">-0.02em;</span>
+
+  <span class="comment">/* Usage ratio (reference) */</span>
+  <span class="comment">/* Black 60% · Carbon 25% · Off-White 14% · White 1% */</span>
+}
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div>Brand Guidelines · Acquify</div>
+  <div class="center">
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M5 19 L12 4 L19 19 L14 19 L12 13 Z" fill="currentColor"/>
+    </svg>
+  </div>
+  <div class="right">San Juan · PR / brand@acquify.co</div>
+</footer>
+
+</body>
+</html>
