@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acquify · Design System v2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Primary Tones */
+    --black: #000000;
+    --carbon: #222326;
+    --carbon-2: #181819;
+    --off-white: #F4F5F8;
+    --white: #FFFFFF;
+
+    /* Functional */
+    --bg: var(--black);
+    --surface: var(--carbon);
+    --surface-elev: #2A2B2E;
+    --line: rgba(244, 245, 248, 0.10);
+    --line-strong: rgba(244, 245, 248, 0.22);
+    --text: var(--off-white);
+    --text-mute: rgba(244, 245, 248, 0.52);
+    --text-faint: rgba(244, 245, 248, 0.28);
+
+    /* Glass */
+    --glass-bg: rgba(244, 245, 248, 0.04);
+    --glass-bg-hover: rgba(244, 245, 248, 0.08);
+    --glass-border: rgba(244, 245, 248, 0.14);
+
+    /* Typography */
+    --font-display: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Tracking */
+    --tracking-loose: 0.32em;
+    --tracking-wide: 0.18em;
+    --tracking-tight: -0.03em;
+    --tracking-display: -0.04em;
+
+    /* Layout */
+    --max: 1320px;
+    --gutter: 48px;
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-pill: 999px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Atmospheric base — luz emergiendo */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 900px 700px at 15% 10%, rgba(244, 245, 248, 0.06), transparent 60%),
+      radial-gradient(ellipse 800px 600px at 90% 85%, rgba(244, 245, 248, 0.04), transparent 60%),
+      radial-gradient(ellipse 600px 400px at 50% 50%, rgba(244, 245, 248, 0.02), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    z-index: 1;
+  }
+
+  main, header, nav, footer { position: relative; z-index: 2; }
+
+  /* ─── NAV ─────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 22px var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    background: rgba(0, 0, 0, 0.7);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-mark {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    font-size: 12px;
+  }
+  .nav-mark svg { width: 28px; height: 25px; }
+  .nav-mark .divider { width: 1px; height: 14px; background: var(--line-strong); }
+
+  .nav-links {
+    display: flex; gap: 36px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+  .nav-links a { color: var(--text-mute); text-decoration: none; transition: color .3s ease; }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-version {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── HERO ─────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    padding: 180px var(--gutter) 80px;
+    max-width: var(--max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: var(--tracking-loose);
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 48px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero-eyebrow::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--line-strong), transparent);
+    max-width: 200px;
+  }
+  .hero-eyebrow .arrow { font-size: 16px; margin-left: auto; opacity: .6; }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(60px, 10vw, 156px);
+    line-height: 0.88;
+    letter-spacing: var(--tracking-display);
+    margin-bottom: 56px;
+  }
+  .hero-title em {
+    font-style: normal;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, var(--text-mute) 60%, var(--text-faint) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    border-top: 1px solid var(--line);
+    padding-top: 32px;
+  }
+  .hero-meta-item .label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+  }
+  .hero-meta-item .value {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Hero ambient orb */
+  .hero-orb {
+    position: absolute;
+    top: 18%; right: 6%;
+    width: 380px; height: 380px;
+    pointer-events: none;
+    opacity: 0.85;
+  }
+
+  /* ─── SECTION SHELL ───────────────────────────── */
+  section {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 120px var(--gutter);
+    border-top: 1px solid var(--line);
+  }
+
+  .section-header {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    margin-bottom: 80px;
+    align-items: start;
+  }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+    padding-top: 16px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(40px, 6vw, 76px);
+    line-height: 0.95;
+    letter-spacing: var(--tracking-display);
+    margin-bottom: 20px;
+  }
+  .section-title em {
+    font-style: normal;
+    background: linear-gradient(135deg, #fff 0%, var(--text-mute) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .section-lead {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--text-mute);
+    max-width: 620px;
+    line-height: 1.65;
+  }
+
+  /* ─── PRINCIPLES ───────────────────────────────── */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .principle {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .principle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 300px 200px at 0% 0%, rgba(244,245,248,0.04), transparent 70%);
+    pointer-events: none;
+  }
+  .principle:hover {
+    background: var(--glass-bg-hover);
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+  }
+  .principle-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-bottom: 32px;
+    letter-spacing: 0.1em;
+  }
+  .principle-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: 12px;
+  }
+  .principle-desc {
+    color: var(--text-mute);
+    font-size: 14px;
+    line-height: 1.65;
+    max-width: 340px;
+  }
+
+  /* ─── LOGO ─────────────────────────────────────── */
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .logo-frame {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 340px;
+    overflow: hidden;
+  }
+  .logo-frame.dark {
+    background: var(--carbon-2);
+    background-image: radial-gradient(ellipse 400px 250px at 30% 30%, rgba(255,255,255,0.05), transparent 70%);
+  }
+  .logo-frame.light { background: var(--off-white); }
+
+  .logo-frame .corner {
+    position: absolute; top: 20px; left: 20px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--text-faint); letter-spacing: 0.1em;
+  }
+  .logo-frame.light .corner { color: rgba(0,0,0,0.4); }
+  .logo-frame .caption {
+    position: absolute; bottom: 20px; right: 20px;
+    font-family: var(--font-display); font-size: 10px; font-weight: 600;
+    color: var(--text-mute); letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  }
+  .logo-frame.light .caption { color: rgba(0,0,0,0.5); }
+
+  .logo-variants {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .logo-mini {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 162px;
+    background: var(--carbon-2);
+  }
+  .logo-mini.invert { background: var(--off-white); }
+
+  .acquify-lockup {
+    display: flex; align-items: center; gap: 24px;
+  }
+  .acquify-lockup .mark { width: 60px; height: 54px; }
+  .acquify-lockup .bar { width: 1px; height: 32px; background: currentColor; opacity: .25; }
+  .acquify-lockup .wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  /* Misuse */
+  .misuse {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .misuse-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    text-align: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .misuse-card .preview {
+    height: 80px; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px; opacity: 0.4;
+  }
+  .misuse-card .x {
+    font-family: var(--font-display);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-mute);
+  }
+  .misuse-card .x::before {
+    content: '✕'; color: #ff5454; margin-right: 8px; opacity: 0.7;
+  }
+
+  /* Clear space */
+  .clearspace {
+    margin-top: 48px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .clearspace-zone {
+    padding: 44px;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-sm);
+    position: relative;
+  }
+  .clearspace-zone::before, .clearspace-zone::after {
+    content: '1x'; position: absolute;
+    font-family: var(--font-mono); font-size: 10px; color: var(--text-faint);
+  }
+  .clearspace-zone::before { top: 18px; left: 50%; transform: translateX(-50%); }
+  .clearspace-zone::after { bottom: 18px; left: 50%; transform: translateX(-50%); }
+
+  /* ─── COLOR ────────────────────────────────────── */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .swatch {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--carbon-2);
+  }
+  .swatch-color {
+    aspect-ratio: 4/5;
+    position: relative;
+    transition: transform .6s cubic-bezier(.2,.8,.2,1);
+  }
+  .swatch:hover .swatch-color { transform: scale(0.97); }
+  .swatch-color .role {
+    position: absolute; top: 20px; left: 20px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.1em; color: var(--text-faint);
+  }
+  .swatch[data-light="true"] .swatch-color .role { color: rgba(0,0,0,0.4); }
+
+  .swatch-meta { padding: 20px; border-top: 1px solid var(--line); }
+  .swatch-meta .name {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 17px; margin-bottom: 4px;
+    letter-spacing: var(--tracking-tight);
+  }
+  .swatch-meta .hex { font-family: var(--font-mono); font-size: 12px; color: var(--text-mute); margin-bottom: 8px; }
+  .swatch-meta .rgb { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); }
+
+  .ratio {
+    margin-top: 64px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .ratio-label {
+    font-family: var(--font-display);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 24px;
+  }
+  .ratio-bar {
+    display: flex;
+    height: 56px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .ratio-bar > div {
+    display: flex; align-items: flex-end; justify-content: flex-start;
+    padding: 12px; font-family: var(--font-mono); font-size: 11px;
+  }
+  .ratio-black { flex: 60; background: var(--black); color: var(--text-mute); border-right: 1px solid var(--line); }
+  .ratio-carbon { flex: 25; background: var(--carbon); color: var(--text-mute); border-right: 1px solid var(--line); }
+  .ratio-off { flex: 14; background: var(--off-white); color: rgba(0,0,0,0.5); border-right: 1px solid var(--line); }
+  .ratio-white { flex: 1; background: var(--white); color: rgba(0,0,0,0.5); }
+  .ratio-note {
+    margin-top: 24px; font-size: 13px; color: var(--text-mute); max-width: 680px;
+  }
+  .ratio-note strong { color: var(--text); font-weight: 600; }
+
+  /* ─── TYPOGRAPHY ──────────────────────────────── */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .type-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 48px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+  }
+  .type-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(244,245,248,0.06), transparent 70%);
+    pointer-events: none;
+  }
+  .type-card .header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 40px;
+    font-family: var(--font-display); font-size: 10px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  }
+  .type-card .header .role { color: var(--text-faint); }
+  .type-card .header .name { color: var(--text); }
+
+  .type-specimen {
+    font-size: 140px;
+    line-height: 1;
+    margin-bottom: 32px;
+    letter-spacing: var(--tracking-display);
+  }
+  .type-specimen.mont { font-family: var(--font-display); font-weight: 800; }
+  .type-specimen.inter { font-family: var(--font-body); font-weight: 500; }
+
+  .type-alphabet {
+    font-size: 13px;
+    color: var(--text-mute);
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+  .type-card.a .type-alphabet { font-family: var(--font-display); font-weight: 600; }
+  .type-card.b .type-alphabet { font-family: var(--font-body); font-weight: 400; }
+
+  .type-usage {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--text-mute);
+  }
+
+  /* Type scale */
+  .scale {
+    margin-top: 48px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .scale-row {
+    display: grid;
+    grid-template-columns: 110px 90px 130px 1fr;
+    align-items: baseline;
+    padding: 32px;
+    border-bottom: 1px solid var(--line);
+    gap: 24px;
+  }
+  .scale-row:last-child { border-bottom: none; }
+  .scale-token {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--text-faint); letter-spacing: 0.08em;
+  }
+  .scale-size, .scale-weight {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--text-mute);
+  }
+  .scale-weight { text-transform: uppercase; }
+  .scale-sample {
+    font-family: var(--font-display);
+    color: var(--text);
+    letter-spacing: var(--tracking-tight);
+  }
+  .scale-sample.body { font-family: var(--font-body); letter-spacing: 0; }
+
+  .scale-row[data-size="display"] .scale-sample { font-size: 64px; font-weight: 800; line-height: 0.95; letter-spacing: var(--tracking-display); }
+  .scale-row[data-size="h1"] .scale-sample { font-size: 40px; font-weight: 700; line-height: 1.05; letter-spacing: var(--tracking-display); }
+  .scale-row[data-size="h2"] .scale-sample { font-size: 24px; font-weight: 600; line-height: 1.2; letter-spacing: var(--tracking-tight); }
+  .scale-row[data-size="body"] .scale-sample { font-size: 16px; font-weight: 400; line-height: 1.55; }
+  .scale-row[data-size="caption"] .scale-sample { font-size: 13px; font-weight: 400; line-height: 1.55; }
+  .scale-row[data-size="label"] .scale-sample {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  }
+
+  /* ─── COMPONENTS ──────────────────────────────── */
+  .components {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .component-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .component-card .label {
+    font-family: var(--font-display); font-size: 10px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 32px;
+  }
+
+  /* Glass Pills (los píldoras de las referencias) */
+  .pill-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .pill {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--text);
+    cursor: pointer;
+    transition: all .3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .pill::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 50%;
+    background: linear-gradient(to bottom, rgba(244,245,248,0.06), transparent);
+    pointer-events: none;
+  }
+  .pill:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--line-strong);
+    transform: translateY(-1px);
+  }
+  .pill.solid {
+    background: var(--off-white);
+    color: var(--black);
+    border-color: var(--off-white);
+  }
+  .pill.solid:hover { background: var(--white); }
+
+  /* Buttons (clásicos) */
+  .btn-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    padding: 16px 28px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .3s ease;
+    background: transparent;
+    color: var(--text);
+    border-radius: var(--radius-sm);
+  }
+  .btn-primary {
+    background: var(--off-white);
+    color: var(--black);
+  }
+  .btn-primary:hover { background: var(--white); transform: translateY(-1px); }
+  .btn-ghost {
+    border-color: var(--line-strong);
+    color: var(--text);
+  }
+  .btn-ghost:hover { border-color: var(--off-white); }
+  .btn-text { color: var(--text-mute); padding: 16px 0; }
+  .btn-text:hover { color: var(--text); }
+  .btn-text::after { content: ' →'; transition: margin .3s ease; }
+  .btn-text:hover::after { margin-left: 6px; }
+
+  /* Input */
+  .input-stack { display: flex; flex-direction: column; gap: 20px; }
+  .input-wrap {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    transition: border-color .3s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .input-wrap:focus-within { border-color: var(--line-strong); }
+  .input-label {
+    font-family: var(--font-display);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    color: var(--text-mute); margin-bottom: 6px;
+  }
+  .input {
+    background: transparent; border: none;
+    color: var(--text); font-family: var(--font-body);
+    font-size: 14px; width: 100%;
+  }
+  .input:focus { outline: none; }
+  .input::placeholder { color: var(--text-faint); }
+
+  /* Card sample */
+  .card-sample {
+    background: var(--carbon-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 32px;
+  }
+  .card-sample .eyebrow {
+    font-family: var(--font-display); font-size: 10px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    color: var(--text-mute); margin-bottom: 16px;
+  }
+  .card-sample .title {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 24px; letter-spacing: var(--tracking-tight);
+    margin-bottom: 12px; line-height: 1.15;
+  }
+  .card-sample .body {
+    color: var(--text-mute);
+    font-size: 13px; line-height: 1.6; margin-bottom: 24px;
+  }
+
+  /* Badges */
+  .badge-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .badge {
+    font-family: var(--font-display);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    padding: 8px 14px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text-mute);
+  }
+  .badge.solid {
+    background: var(--off-white);
+    color: var(--black);
+    border-color: var(--off-white);
+  }
+
+  /* ─── 3D ELEMENTS ─────────────────────────────── */
+  .three-d-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .three-d-tile {
+    aspect-ratio: 1/1.1;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    background: var(--carbon-2);
+    background-image:
+      radial-gradient(ellipse 400px 300px at 50% 50%, rgba(244,245,248,0.05), transparent 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .three-d-tile .label {
+    position: absolute;
+    bottom: 24px; left: 24px;
+    font-family: var(--font-display); font-size: 11px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    color: var(--text-mute);
+    z-index: 3;
+  }
+  .three-d-tile .num {
+    position: absolute;
+    top: 24px; left: 24px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--text-faint); z-index: 3;
+  }
+
+  /* 3D Orb */
+  .orb-3d {
+    width: 60%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 30%, #fff 0%, #d0d3da 12%, #5a5d65 38%, #1d1e21 68%, #050506 100%);
+    box-shadow:
+      inset -20px -25px 60px rgba(0,0,0,0.7),
+      inset 15px 15px 40px rgba(255,255,255,0.08),
+      0 30px 80px rgba(0,0,0,0.5),
+      0 0 100px rgba(244,245,248,0.06);
+    position: relative;
+    animation: float 8s ease-in-out infinite;
+  }
+  .orb-3d::after {
+    content: '';
+    position: absolute;
+    top: 12%; left: 22%;
+    width: 35%; height: 25%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.6), transparent 70%);
+    border-radius: 50%;
+    filter: blur(4px);
+  }
+
+  /* 3D Hex (Opulus / agentic) */
+  .hex-3d {
+    width: 50%;
+    aspect-ratio: 1;
+    position: relative;
+    animation: float 7s ease-in-out infinite;
+    animation-delay: -2s;
+  }
+  .hex-3d svg { width: 100%; height: 100%; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6)); }
+
+  /* 3D Rocket-ish (apex stylized) */
+  .apex-3d {
+    width: 45%;
+    aspect-ratio: 1;
+    position: relative;
+    animation: float 9s ease-in-out infinite;
+    animation-delay: -4s;
+  }
+  .apex-3d svg { width: 100%; height: 100%; filter: drop-shadow(0 25px 50px rgba(0,0,0,0.7)); }
+
+  /* Ring orbit */
+  .ring-orbit {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    border: 1px solid rgba(244,245,248,0.08);
+    border-radius: 50%;
+    transform: rotateX(75deg);
+    pointer-events: none;
+  }
+  .ring-orbit::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 50%;
+    border-top: 1px solid rgba(244,245,248,0.3);
+    transform: rotate(-15deg);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(2deg); }
+  }
+
+  .three-d-note {
+    margin-top: 32px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 32px 40px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-size: 13px;
+    color: var(--text-mute);
+    line-height: 1.7;
+  }
+  .three-d-note strong { color: var(--text); font-weight: 600; }
+
+  /* ─── VISUAL LANGUAGE ─────────────────────────── */
+  .visuals {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .visual-tile {
+    aspect-ratio: 16/10;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .visual-tile .tile-label {
+    position: absolute; bottom: 24px; left: 24px;
+    font-family: var(--font-display); font-size: 11px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    color: var(--text-mute); z-index: 3;
+  }
+  .visual-tile .tile-num {
+    position: absolute; top: 24px; left: 24px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--text-faint); z-index: 3;
+  }
+
+  .tile-1 {
+    background:
+      radial-gradient(ellipse 220px 130px at 60% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0.1) 40%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 60% 50%, rgba(255,255,255,0.05), transparent 70%),
+      var(--bg);
+  }
+  .tile-2 {
+    background:
+      radial-gradient(circle 70px at 25% 40%, rgba(255,255,255,0.6), transparent 60%),
+      radial-gradient(circle 90px at 55% 65%, rgba(255,255,255,0.5), transparent 60%),
+      radial-gradient(circle 55px at 75% 35%, rgba(255,255,255,0.55), transparent 60%),
+      radial-gradient(circle 45px at 40% 75%, rgba(255,255,255,0.4), transparent 60%),
+      var(--bg);
+    filter: blur(0.5px);
+  }
+  .tile-3 {
+    background:
+      radial-gradient(ellipse 200px 110px at 70% 60%, rgba(255,255,255,0.35), transparent 60%),
+      var(--bg);
+  }
+  .tile-4 {
+    background: var(--bg);
+    position: relative;
+  }
+  .tile-4::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      repeating-radial-gradient(
+        circle at 50% 130%,
+        transparent 0, transparent 38px,
+        rgba(255,255,255,0.13) 38px, rgba(255,255,255,0.13) 39px
+      );
+    mask: linear-gradient(to bottom, transparent 30%, black 60%, black 90%);
+    -webkit-mask: linear-gradient(to bottom, transparent 30%, black 60%, black 90%);
+  }
+
+  .nots {
+    margin-top: 48px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 32px 40px;
+    display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .nots .label {
+    font-family: var(--font-display);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .nots .items {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    font-family: var(--font-display); font-size: 13px; font-weight: 500;
+    color: var(--text-mute);
+  }
+  .nots .items span::before { content: '✕ '; color: #ff5454; opacity: .7; margin-right: 4px; }
+
+  /* ─── APPLICATIONS (mockups inspirados en las refs) ─────────── */
+  .applications {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .app-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4/5;
+    position: relative;
+    background: var(--carbon-2);
+    background-image:
+      radial-gradient(ellipse 500px 300px at 50% 50%, rgba(244,245,248,0.04), transparent 70%);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-card-1 .eyebrow {
+    font-family: var(--font-display);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    color: var(--text-mute); margin-bottom: 24px;
+  }
+  .app-card-1 .headline {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 0.92;
+    letter-spacing: var(--tracking-display);
+    margin-bottom: 32px;
+    flex: 1;
+  }
+  .app-card-1 .headline em {
+    font-style: normal;
+    background: linear-gradient(135deg, #fff 0%, var(--text-mute) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .app-card-1 .pill-cluster {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 32px;
+  }
+  .app-card-1 .footer-line {
+    display: flex; justify-content: space-between;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-display); font-size: 10px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    color: var(--text-mute);
+  }
+  .app-card-1 .corner-arrow {
+    position: absolute; top: 32px; right: 32px;
+    color: var(--text-mute);
+    font-size: 20px;
+  }
+
+  /* App card 2 — UI mockup */
+  .app-card-2 .eyebrow {
+    font-family: var(--font-display);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+    color: var(--text-mute); margin-bottom: 16px;
+  }
+  .app-card-2 .headline {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 0.95;
+    letter-spacing: var(--tracking-display);
+    margin-bottom: 8px;
+  }
+  .app-card-2 .headline em {
+    font-style: normal;
+    background: linear-gradient(135deg, #fff 0%, var(--text-mute) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .app-card-2 .subline {
+    color: var(--text-mute);
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+  .ui-mockup {
+    flex: 1;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ui-mockup .tabs {
+    display: flex; gap: 8px; margin-bottom: 24px;
+  }
+  .ui-mockup .tab {
+    font-family: var(--font-display); font-size: 10px; font-weight: 600;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    background: rgba(244,245,248,0.06);
+    border: 1px solid var(--glass-border);
+    color: var(--text-mute);
+  }
+  .ui-mockup .tab.active { color: var(--text); border-color: var(--line-strong); background: rgba(244,245,248,0.12); }
+  .ui-mockup .chart {
+    height: 60%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cpath d='M0 150 Q 40 130 80 140 T 160 120 T 240 100 T 320 80 T 400 60' fill='none' stroke='%23F4F5F8' stroke-width='1.5' opacity='0.7'/%3E%3Cpath d='M0 170 Q 40 160 80 165 T 160 155 T 240 145 T 320 130 T 400 120' fill='none' stroke='%23F4F5F8' stroke-width='1' opacity='0.3'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+  }
+  .ui-mockup .data-tooltip {
+    position: absolute;
+    bottom: 30%; right: 18%;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--glass-border);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* ─── TOKENS ─────────────────────────────────── */
+  .tokens {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 40px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.9;
+    overflow-x: auto;
+  }
+  .tokens .comment { color: var(--text-faint); }
+  .tokens .var { color: var(--text); }
+  .tokens .val { color: var(--text-mute); }
+
+  /* ─── FOOTER ─────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 64px var(--gutter);
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 48px;
+    color: var(--text-faint);
+    font-family: var(--font-display);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: var(--tracking-wide); text-transform: uppercase;
+  }
+  footer .center {
+    display: flex; align-items: center; gap: 16px;
+  }
+  footer .center svg { width: 24px; height: 22px; opacity: 0.5; }
+  footer .right { text-align: right; }
+
+  /* ─── ANIMATIONS ─────────────────────────────── */
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero > * { animation: reveal 1s cubic-bezier(.2,.8,.2,1) both; }
+  .hero-eyebrow { animation-delay: .1s; }
+  .hero-title { animation-delay: .25s; }
+  .hero-meta { animation-delay: .45s; }
+  .hero-orb { animation: reveal 1.4s cubic-bezier(.2,.8,.2,1) both, float 8s ease-in-out infinite 1.4s; }
+
+  /* ─── RESPONSIVE ─────────────────────────────── */
+  @media (max-width: 900px) {
+    :root { --gutter: 24px; }
+    .nav-links { display: none; }
+    .principles, .components, .visuals, .type-grid, .applications { grid-template-columns: 1fr; }
+    .three-d-grid { grid-template-columns: 1fr 1fr; }
+    .palette { grid-template-columns: repeat(2, 1fr); }
+    .logo-grid { grid-template-columns: 1fr; }
+    .hero-meta { grid-template-columns: repeat(2, 1fr); }
+    .section-header { grid-template-columns: 1fr; gap: 16px; }
+    .scale-row { grid-template-columns: 1fr; gap: 8px; }
+    .hero-orb { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-mark">
+    <svg viewBox="0 0 294 265" fill="none" style="color: #F4F5F8;">
+      <path fill="currentColor" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+      <path fill="currentColor" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+    </svg>
+    <span class="divider"></span>
+    <span>ACQUIFY</span>
+    <span class="divider"></span>
+    <span style="color: var(--text-mute);">DESIGN SYSTEM</span>
+  </div>
+  <div class="nav-links">
+    <a href="#principles">Principles</a>
+    <a href="#logo">Logo</a>
+    <a href="#color">Color</a>
+    <a href="#type">Typography</a>
+    <a href="#components">Components</a>
+    <a href="#three-d">3D</a>
+    <a href="#visual">Visual</a>
+  </div>
+  <div class="nav-version">v2.0 · 2026</div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-orb">
+    <div class="orb-3d"></div>
+  </div>
+
+  <div class="hero-eyebrow">
+    Brand Guidelines · System Specification
+    <span class="arrow">↘</span>
+  </div>
+
+  <h1 class="hero-title">
+    Light is <em>earned,</em><br>
+    not distributed.
+  </h1>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="label">Version</div>
+      <div class="value">2.0 · 2026</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">Origin</div>
+      <div class="value">San Juan · PR</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">Contact</div>
+      <div class="value">brand@acquify.co</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">Chapters</div>
+      <div class="value">08 / Sections</div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ PRINCIPLES ═══ -->
+<section id="principles">
+  <div class="section-header">
+    <div class="section-num">01 / Principles</div>
+    <div>
+      <h2 class="section-title">Five rules that govern <em>everything.</em></h2>
+      <p class="section-lead">The brand is predominantly dark. Light emerges from within, never imposed from outside. These five principles precede every design decision — from a single ad creative to a full product UI.</p>
+    </div>
+  </div>
+
+  <div class="principles">
+    <div class="principle">
+      <div class="principle-num">01</div>
+      <div class="principle-title">Dark base</div>
+      <div class="principle-desc">Light emerges from within the composition, not laid on top of it.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">02</div>
+      <div class="principle-title">Organic structure</div>
+      <div class="principle-desc">No mechanical grids. Form follows breath, not measurement.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">03</div>
+      <div class="principle-title">Selective luminosity</div>
+      <div class="principle-desc">Brightness is earned. Reserve light for what matters most.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">04</div>
+      <div class="principle-title">Volume and depth</div>
+      <div class="principle-desc">Flat is not Acquify. Every surface has weight, atmosphere, and material.</div>
+    </div>
+    <div class="principle" style="grid-column: 1 / -1;">
+      <div class="principle-num">05</div>
+      <div class="principle-title">Monochromatic range</div>
+      <div class="principle-desc">Black to off-white. No chromatic accents. Ever.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LOGO ═══ -->
+<section id="logo">
+  <div class="section-header">
+    <div class="section-num">02 / Logo</div>
+    <div>
+      <h2 class="section-title">The mark and its <em>lockups.</em></h2>
+      <p class="section-lead">A geometric apex. Authority through restraint. Use uppercase ACQUIFY for marketing; title case Acquify for documents.</p>
+    </div>
+  </div>
+
+  <div class="logo-grid">
+    <div class="logo-frame dark">
+      <span class="corner">PRIMARY</span>
+      <div class="acquify-lockup" style="color: var(--off-white);">
+        <svg class="mark" viewBox="0 0 294 265" fill="none">
+          <path fill="currentColor" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+          <path fill="currentColor" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+        </svg>
+        <span class="bar"></span>
+        <span class="wordmark">ACQUIFY</span>
+      </div>
+      <span class="caption">Horizontal Lockup</span>
+    </div>
+    <div class="logo-frame light">
+      <span class="corner">INVERSE</span>
+      <div class="acquify-lockup" style="color: var(--black);">
+        <svg class="mark" viewBox="0 0 294 265" fill="none">
+          <path fill="currentColor" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+          <path fill="currentColor" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+        </svg>
+        <span class="bar"></span>
+        <span class="wordmark">ACQUIFY</span>
+      </div>
+      <span class="caption">On Off-White</span>
+    </div>
+  </div>
+
+  <div class="logo-variants">
+    <div class="logo-mini">
+      <svg width="80" height="72" viewBox="0 0 294 265" fill="none">
+        <path fill="#F4F5F8" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+        <path fill="#F4F5F8" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+      </svg>
+    </div>
+    <div class="logo-mini invert">
+      <svg width="80" height="72" viewBox="0 0 294 265" fill="none">
+        <path fill="#000000" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+        <path fill="#000000" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="clearspace">
+    <div class="clearspace-zone">
+      <div class="acquify-lockup" style="color: var(--off-white);">
+        <svg class="mark" viewBox="0 0 294 265" fill="none">
+          <path fill="currentColor" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+          <path fill="currentColor" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+        </svg>
+        <span class="bar"></span>
+        <span class="wordmark">ACQUIFY</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="misuse">
+    <div class="misuse-card">
+      <div class="preview">
+        <svg width="60" height="54" viewBox="0 0 294 265" style="transform: rotate(18deg);">
+          <path fill="#F4F5F8" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+          <path fill="#F4F5F8" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+        </svg>
+      </div>
+      <div class="x">No Rotation</div>
+    </div>
+    <div class="misuse-card">
+      <div class="preview">
+        <svg width="100" height="40" viewBox="0 0 294 265" preserveAspectRatio="none">
+          <path fill="#F4F5F8" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+          <path fill="#F4F5F8" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+        </svg>
+      </div>
+      <div class="x">No Distortion</div>
+    </div>
+    <div class="misuse-card">
+      <div class="preview" style="opacity: 0.3;">
+        <svg width="60" height="54" viewBox="0 0 294 265">
+          <path fill="#F4F5F8" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+          <path fill="#F4F5F8" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+        </svg>
+      </div>
+      <div class="x">No Reduced Opacity</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COLOR ═══ -->
+<section id="color">
+  <div class="section-header">
+    <div class="section-num">03 / Color</div>
+    <div>
+      <h2 class="section-title">Three primary tones. <em>One support.</em></h2>
+      <p class="section-lead">No chromatic accents under any circumstance. The palette is intentionally narrow to enforce the discipline of monochromatic range.</p>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-color" style="background: #000000;">
+        <div class="role">PRIMARY · 01</div>
+      </div>
+      <div class="swatch-meta">
+        <div class="name">Black</div>
+        <div class="hex">#000000</div>
+        <div class="rgb">RGB 0 · 0 · 0</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #222326;">
+        <div class="role">PRIMARY · 02</div>
+      </div>
+      <div class="swatch-meta">
+        <div class="name">Carbon</div>
+        <div class="hex">#222326</div>
+        <div class="rgb">RGB 34 · 35 · 38</div>
+      </div>
+    </div>
+    <div class="swatch" data-light="true">
+      <div class="swatch-color" style="background: #F4F5F8;">
+        <div class="role">PRIMARY · 03</div>
+      </div>
+      <div class="swatch-meta">
+        <div class="name">Off White</div>
+        <div class="hex">#F4F5F8</div>
+        <div class="rgb">RGB 244 · 245 · 248</div>
+      </div>
+    </div>
+    <div class="swatch" data-light="true">
+      <div class="swatch-color" style="background: #FFFFFF; border-left: 1px solid var(--line);">
+        <div class="role">SUPPORT · 04</div>
+      </div>
+      <div class="swatch-meta">
+        <div class="name">White</div>
+        <div class="hex">#FFFFFF</div>
+        <div class="rgb">RGB 255 · 255 · 255</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ratio">
+    <div class="ratio-label">Usage Ratio · Surface Allocation</div>
+    <div class="ratio-bar">
+      <div class="ratio-black">60% · Black</div>
+      <div class="ratio-carbon">25% · Carbon</div>
+      <div class="ratio-off">14% · Off</div>
+      <div class="ratio-white">1%</div>
+    </div>
+    <p class="ratio-note">Three primary tones. One typographic support. <strong>No chromatic accents.</strong> The brand is predominantly dark — light is earned, not distributed.</p>
+  </div>
+</section>
+
+<!-- ═══ TYPOGRAPHY ═══ -->
+<section id="type">
+  <div class="section-header">
+    <div class="section-num">04 / Typography</div>
+    <div>
+      <h2 class="section-title">Two voices. <em>Never inverted.</em></h2>
+      <p class="section-lead">Montserrat carries authority — headlines, labels, brand voice. Use Bold (700) and ExtraBold (800) for impact. Inter carries information — body copy, captions, data. Roles do not invert.</p>
+    </div>
+  </div>
+
+  <div class="type-grid">
+    <div class="type-card a">
+      <div class="header">
+        <span class="role">01 · Primary</span>
+        <span class="name">Montserrat ExtraBold</span>
+      </div>
+      <div class="type-specimen mont">Aa</div>
+      <div class="type-alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+      <div class="type-alphabet">0123456789</div>
+      <div class="type-usage">Authority · Headlines · Display · Bold statements</div>
+    </div>
+    <div class="type-card b">
+      <div class="header">
+        <span class="role">02 · Secondary</span>
+        <span class="name">Inter Medium</span>
+      </div>
+      <div class="type-specimen inter">Aa</div>
+      <div class="type-alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+      <div class="type-alphabet">0123456789</div>
+      <div class="type-usage">Information · Body · Captions · UI text</div>
+    </div>
+  </div>
+
+  <div class="scale">
+    <div class="scale-row" data-size="display">
+      <div class="scale-token">display</div>
+      <div class="scale-size">64 / 60</div>
+      <div class="scale-weight">Mont · 800</div>
+      <div class="scale-sample">We Are Hiring</div>
+    </div>
+    <div class="scale-row" data-size="h1">
+      <div class="scale-token">h1</div>
+      <div class="scale-size">40 / 42</div>
+      <div class="scale-weight">Mont · 700</div>
+      <div class="scale-sample">Section heading</div>
+    </div>
+    <div class="scale-row" data-size="h2">
+      <div class="scale-token">h2</div>
+      <div class="scale-size">24 / 28</div>
+      <div class="scale-weight">Mont · 600</div>
+      <div class="scale-sample">Component title</div>
+    </div>
+    <div class="scale-row" data-size="body">
+      <div class="scale-token">body</div>
+      <div class="scale-size">16 / 24</div>
+      <div class="scale-weight">Inter · 400</div>
+      <div class="scale-sample body">The paragraph carries information without drawing attention to itself.</div>
+    </div>
+    <div class="scale-row" data-size="caption">
+      <div class="scale-token">caption</div>
+      <div class="scale-size">13 / 20</div>
+      <div class="scale-weight">Inter · 400</div>
+      <div class="scale-sample body">Supporting detail and metadata.</div>
+    </div>
+    <div class="scale-row" data-size="label">
+      <div class="scale-token">label</div>
+      <div class="scale-size">11 / 16</div>
+      <div class="scale-weight">Mont · 600</div>
+      <div class="scale-sample">UPPERCASE LABEL</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMPONENTS ═══ -->
+<section id="components">
+  <div class="section-header">
+    <div class="section-num">05 / Components</div>
+    <div>
+      <h2 class="section-title">The smallest <em>expressions</em> of the system.</h2>
+      <p class="section-lead">Components inherit the brand's material discipline: glass surfaces with selective luminosity, pill-shaped interactive elements, and restrained contrast.</p>
+    </div>
+  </div>
+
+  <div class="components">
+    <div class="component-card">
+      <div class="label">Glass Pills · Primary Interactive</div>
+      <div class="pill-row">
+        <button class="pill solid">Get Started</button>
+        <button class="pill">SEO Expert</button>
+        <button class="pill">Social Media</button>
+      </div>
+      <div class="pill-row" style="margin-top: 16px;">
+        <button class="pill">Art Director</button>
+        <button class="pill">Project Manager</button>
+      </div>
+    </div>
+
+    <div class="component-card">
+      <div class="label">Buttons · Secondary</div>
+      <div class="btn-row">
+        <button class="btn btn-primary">Primary</button>
+        <button class="btn btn-ghost">Ghost</button>
+        <button class="btn btn-text">Learn more</button>
+      </div>
+    </div>
+
+    <div class="component-card">
+      <div class="label">Glass Input · Form Field</div>
+      <div class="input-stack">
+        <div class="input-wrap">
+          <div class="input-label">Email</div>
+          <input class="input" type="text" placeholder="hello@acquify.co">
+        </div>
+        <div class="input-wrap">
+          <div class="input-label">Company</div>
+          <input class="input" type="text" placeholder="Your company">
+        </div>
+      </div>
+    </div>
+
+    <div class="component-card">
+      <div class="label">Card · Content Surface</div>
+      <div class="card-sample">
+        <div class="eyebrow">Case Study · 2026</div>
+        <div class="title">A service business in Puerto Rico</div>
+        <div class="body">A measured approach to qualified lead generation, executed within a monochromatic brand system.</div>
+        <button class="btn btn-text" style="padding: 0;">Read case</button>
+      </div>
+    </div>
+
+    <div class="component-card" style="grid-column: 1 / -1;">
+      <div class="label">Badges · Status & Metadata</div>
+      <div class="badge-row">
+        <span class="badge solid">New</span>
+        <span class="badge">Beta</span>
+        <span class="badge">B2B</span>
+        <span class="badge">PR · LATAM</span>
+        <span class="badge">v2.0</span>
+        <span class="badge">2026</span>
+        <span class="badge">Monochrome</span>
+        <span class="badge">Glass System</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3D ELEMENTS ═══ -->
+<section id="three-d">
+  <div class="section-header">
+    <div class="section-num">06 / 3D Elements</div>
+    <div>
+      <h2 class="section-title">Volumetric objects as <em>focal anchors.</em></h2>
+      <p class="section-lead">3D elements give compositions weight, gravity, and depth. Always rendered in monochrome — chrome, matte black, or off-white materials only. Used sparingly as the singular focal point of a layout.</p>
+    </div>
+  </div>
+
+  <div class="three-d-grid">
+    <div class="three-d-tile">
+      <div class="num">01</div>
+      <div class="orb-3d"></div>
+      <div class="label">Chrome Orb · Hero</div>
+    </div>
+
+    <div class="three-d-tile">
+      <div class="num">02</div>
+      <div class="hex-3d">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3a3b3e"/>
+              <stop offset="50%" stop-color="#1a1b1d"/>
+              <stop offset="100%" stop-color="#000000"/>
+            </linearGradient>
+            <linearGradient id="hexEdge" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#F4F5F8" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#F4F5F8" stop-opacity="0.05"/>
+            </linearGradient>
+          </defs>
+          <polygon points="100,20 170,60 170,140 100,180 30,140 30,60" fill="url(#hexGrad)" stroke="url(#hexEdge)" stroke-width="1.5"/>
+          <polygon points="100,20 170,60 170,140 100,180 30,140 30,60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+          <!-- Inner mark (Acquify symbol scaled and centered) -->
+          <g transform="translate(67, 70) scale(0.22)">
+            <path fill="#F4F5F8" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+            <path fill="#F4F5F8" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+          </g>
+          <!-- Highlight -->
+          <path d="M100 20 L170 60 L165 65 L100 28 Z" fill="rgba(255,255,255,0.15)"/>
+        </svg>
+      </div>
+      <div class="label">Hex Module · Product</div>
+    </div>
+
+    <div class="three-d-tile">
+      <div class="num">03</div>
+      <div class="apex-3d">
+        <svg viewBox="0 0 294 265" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="apexGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stop-color="#F4F5F8"/>
+              <stop offset="50%" stop-color="#9a9b9e"/>
+              <stop offset="100%" stop-color="#1a1b1d"/>
+            </linearGradient>
+            <linearGradient id="apexHi" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
+              <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- The actual Acquify symbol with metallic treatment -->
+          <path fill="url(#apexGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="0.5" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+          <path fill="url(#apexGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="0.5" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+          <!-- Highlight edge along the leading curve -->
+          <path fill="url(#apexHi)" opacity="0.6" d="M102.2,62.73 L13.68,181.02 L20,178 L102.2,68 Z"/>
+        </svg>
+      </div>
+      <div class="label">Apex · Brand Mark 3D</div>
+    </div>
+  </div>
+
+  <div class="three-d-note">
+    <strong>Material rules.</strong> 3D elements are rendered in three approved materials: <strong>chrome/liquid metal</strong> (highly reflective, polished — for hero compositions), <strong>matte black with sharp edge-light</strong> (industrial, brand-mark module — for product/feature visuals), and <strong>off-white satin</strong> (rare, ceremonial — for premium announcements). Always cast soft drop shadows. Never use colored lighting, neon rims, or decorative environments. <strong>One 3D object per layout</strong> — they are focal points, not decoration.
+  </div>
+</section>
+
+<!-- ═══ VISUAL LANGUAGE ═══ -->
+<section id="visual">
+  <div class="section-header">
+    <div class="section-num">07 / Visual Language</div>
+    <div>
+      <h2 class="section-title">Atmosphere over <em>decoration.</em></h2>
+      <p class="section-lead">Imagery breathes light from within darkness. Volumetric, organic, restrained. Never flat. Never colored. Never sourced from stock.</p>
+    </div>
+  </div>
+
+  <div class="visuals">
+    <div class="visual-tile tile-1">
+      <div class="tile-num">01</div>
+      <div class="tile-label">Dark base · Inner light</div>
+    </div>
+    <div class="visual-tile tile-2">
+      <div class="tile-num">02</div>
+      <div class="tile-label">Organic luminosity</div>
+    </div>
+    <div class="visual-tile tile-3">
+      <div class="tile-num">03</div>
+      <div class="tile-label">Selective brightness</div>
+    </div>
+    <div class="visual-tile tile-4">
+      <div class="tile-num">04</div>
+      <div class="tile-label">Volume · Depth · Form</div>
+    </div>
+  </div>
+
+  <div class="nots">
+    <div class="label">Not</div>
+    <div class="items">
+      <span>Color</span>
+      <span>Stock photography</span>
+      <span>Flat icons</span>
+      <span>Decorative gradients</span>
+      <span>Neon glows</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ APPLICATIONS ═══ -->
+<section id="applications">
+  <div class="section-header">
+    <div class="section-num">08 / Applications</div>
+    <div>
+      <h2 class="section-title">The system <em>in motion.</em></h2>
+      <p class="section-lead">Reference applications showing the system applied to social ads, product UI, and brand announcements. Same vocabulary, different contexts.</p>
+    </div>
+  </div>
+
+  <div class="applications">
+    <!-- App 1: Recruitment ad -->
+    <div class="app-card app-card-1">
+      <div class="corner-arrow">↘</div>
+      <div class="eyebrow">Recruitment Announcement</div>
+      <div class="headline">We Are <em>Hiring</em></div>
+      <div class="pill-cluster">
+        <span class="pill">SEO Expert</span>
+        <span class="pill">Social Media</span>
+        <span class="pill">Art Director</span>
+        <span class="pill">Project Manager</span>
+      </div>
+      <div class="footer-line">
+        <span>Apply Now ↗</span>
+        <span>brand@acquify.co</span>
+      </div>
+    </div>
+
+    <!-- App 2: Product / UI feature -->
+    <div class="app-card app-card-2">
+      <div class="eyebrow">Product · Feature Launch</div>
+      <div class="headline">The Intelligent<br><em>Growth System</em></div>
+      <div class="subline">Advanced AI + Privacy</div>
+      <div class="ui-mockup">
+        <div class="tabs">
+          <span class="tab active">Performance</span>
+          <span class="tab">Audience</span>
+          <span class="tab">Spend</span>
+          <span class="tab">AI</span>
+        </div>
+        <div class="chart"></div>
+        <div class="data-tooltip">+34.7% MoM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TOKENS ═══ -->
+<section>
+  <div class="section-header">
+    <div class="section-num">09 / Tokens</div>
+    <div>
+      <h2 class="section-title">Design <em>tokens.</em></h2>
+      <p class="section-lead">CSS custom properties for direct implementation. Copy and paste into any project.</p>
+    </div>
+  </div>
+
+  <div class="tokens">
+<span class="comment">/* ── Acquify Design Tokens · v2.0 ──────────────── */</span>
+:root {
+  <span class="comment">/* Primary Tones */</span>
+  <span class="var">--acq-black</span>:      <span class="val">#000000;</span>
+  <span class="var">--acq-carbon</span>:     <span class="val">#222326;</span>
+  <span class="var">--acq-off-white</span>:  <span class="val">#F4F5F8;</span>
+  <span class="var">--acq-white</span>:      <span class="val">#FFFFFF;</span>
+
+  <span class="comment">/* Glass Surfaces */</span>
+  <span class="var">--acq-glass-bg</span>:       <span class="val">rgba(244, 245, 248, 0.04);</span>
+  <span class="var">--acq-glass-hover</span>:    <span class="val">rgba(244, 245, 248, 0.08);</span>
+  <span class="var">--acq-glass-border</span>:   <span class="val">rgba(244, 245, 248, 0.14);</span>
+
+  <span class="comment">/* Functional */</span>
+  <span class="var">--acq-bg</span>:         <span class="val">var(--acq-black);</span>
+  <span class="var">--acq-surface</span>:    <span class="val">var(--acq-carbon);</span>
+  <span class="var">--acq-text</span>:       <span class="val">var(--acq-off-white);</span>
+  <span class="var">--acq-line</span>:       <span class="val">rgba(244, 245, 248, 0.10);</span>
+
+  <span class="comment">/* Typography */</span>
+  <span class="var">--acq-font-display</span>: <span class="val">'Montserrat', sans-serif;</span>
+  <span class="var">--acq-font-body</span>:    <span class="val">'Inter', sans-serif;</span>
+
+  <span class="comment">/* Weights */</span>
+  <span class="var">--acq-weight-display</span>: <span class="val">800;</span>
+  <span class="var">--acq-weight-headline</span>: <span class="val">700;</span>
+  <span class="var">--acq-weight-title</span>: <span class="val">600;</span>
+  <span class="var">--acq-weight-label</span>: <span class="val">600;</span>
+  <span class="var">--acq-weight-body</span>: <span class="val">400;</span>
+
+  <span class="comment">/* Radius */</span>
+  <span class="var">--acq-radius-sm</span>:  <span class="val">8px;</span>
+  <span class="var">--acq-radius-md</span>:  <span class="val">16px;</span>
+  <span class="var">--acq-radius-lg</span>:  <span class="val">24px;</span>
+  <span class="var">--acq-radius-pill</span>: <span class="val">999px;</span>
+
+  <span class="comment">/* Tracking */</span>
+  <span class="var">--acq-track-display</span>: <span class="val">-0.04em;</span>
+  <span class="var">--acq-track-tight</span>:   <span class="val">-0.03em;</span>
+  <span class="var">--acq-track-wide</span>:    <span class="val">0.18em;</span>
+  <span class="var">--acq-track-loose</span>:   <span class="val">0.32em;</span>
+
+  <span class="comment">/* Usage ratio (reference) */</span>
+  <span class="comment">/* Black 60% · Carbon 25% · Off-White 14% · White 1% */</span>
+}
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div>Brand Guidelines · Acquify v2.0</div>
+  <div class="center">
+    <svg viewBox="0 0 294 265" fill="none">
+      <path fill="currentColor" d="M109.93,135.69c-20.95,2.57-46.37,18.93-63.66,32.23L0,203.52c3.27-8.97,8.32-15.35,13.68-22.5L102.2,62.73l28.95,82.22c-6.27-6.86-12.68-9.88-21.22-9.27Z"/>
+      <path fill="currentColor" d="M293.97,264.95c-4.97,1.41-9.28.7-13.99.55V0s14,0,14,0v264.94Z"/>
+    </svg>
+  </div>
+  <div class="right">San Juan · PR / brand@acquify.co</div>
+</footer>
+
+</body>
+</html>
